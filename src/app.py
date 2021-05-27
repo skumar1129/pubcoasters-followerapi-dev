@@ -67,7 +67,7 @@ def userfollowers(user):
 
 @app.route('/userfollowing/<string:user>', methods=['GET'])
 @cross_origin()
-def userfollowers(user):
+def userfollowing(user):
     req_arg = request.args.get('offset')
     if (req_arg is None):
         page = 1
