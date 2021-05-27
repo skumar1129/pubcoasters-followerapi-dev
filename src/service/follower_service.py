@@ -14,7 +14,7 @@ from src.response.post_response import PostResponse
 
 class FollowerService():
 
-    def createFollower(self, body):
+    def createFollowing(self, body):
         try:
             follower = body['follower']
             following = body['following']
@@ -27,7 +27,7 @@ class FollowerService():
             return jsonify({'message': 'unable to creating new following'}), 500
 
 
-    def deleteFollower(self, body):
+    def deleteFollowing(self, body):
         try:
             follower = body['follower']
             following = body['following']

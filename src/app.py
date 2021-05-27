@@ -29,9 +29,9 @@ def test():
 @cross_origin()
 def follower():
     if request.method == 'POST':
-        return follower_service().createFollower(request.json)
+        return follower_service().createFollowing(request.json)
     elif request.method == 'DELETE':
-        return follower_service.deleteFollower(request.json)
+        return follower_service.deleteFollowing(request.json)
     
 @app.route('/allfollowers', methods=['GET'])
 @cross_origin()
