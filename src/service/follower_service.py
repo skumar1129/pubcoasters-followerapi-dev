@@ -1,0 +1,123 @@
+from flask import request, jsonify
+from src.app import db
+from src.models.post import Post
+from src.models.neighborhood import Neighborhood
+from src.models.location import Location
+from src.models.rating import Rating
+from src.models.bar import Bar
+from src.models.likes import Likes
+from src.models.comment import Comment
+from src.models.user import User
+from src.models.follower import Follower
+from src.response.post_response import PostResponse
+
+
+class FollowerService():
+
+    def createFollower(self, body):
+        try:
+            follower = body['follower']
+            following = body['following']
+            new_following = Follower(follower_user=follower, following_user=following)
+            db.session.add(new_following)
+            db.session.commit()
+            return jsonify({'message': 'successfully created following'}), 200
+        except Exception as e:
+            print(e)
+            return jsonify({'message': 'unable to creating new following'}), 500
+
+
+    def deleteFollower(self, body):
+        try:
+            follower = body['follower']
+            following = body['following']
+            old_following = Follower.query.filter_by(follower_user=follower, following_user=following).first()
+            db.session.delete(old_following)
+            db.session.commit()
+            return jsonify({'message': 'successfully created following'}), 200
+        except Exception as e:
+            print(e)
+            return jsonify 
+
+    def getAllFollowers(self, user, page):
+        all_followers = []
+        try:
+            followers_data = Follower.query.filter_by(following_user=user).paginate(page=page, per_page=7)
+            for follower_data in followers_data.items:
+                follower = {'user': follower_data.follower_user}
+                all_followers.append(follower)
+            return jsonify(all_followers)
+        except Exception as e:
+            print(e)
+            if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
+                return jsonify(all_followers)
+            return jsonify({'message': 'unable to retrieve followers'}), 500
+
+
+    def getAllFollowing(self, user, page):
+        all_following = []
+        try:
+            followings_data = Follower.query.filter_by(follower_user=user).paginate(page=page, per_page=7)
+            for following_data in followings_data.items:
+                following = {'user': following_data.following_user}
+                all_following.append(following)
+            return jsonify(all_following)
+        except Exception as e:
+            print(e)
+            if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
+                return jsonify(all_following)
+            return jsonify({'message': 'unable to retrieve following'}), 500
+    
+
+    def getAllUserFollowers(self, user, page):
+        all_followers = []
+        try:
+            followers_data = Follower.query.filter_by(following_user=user).paginate(page=page, per_page=7)
+            for follower_data in followers_data.items:
+                follower = {'user': follower_data.follower_user}
+                all_followers.append(follower)
+            return jsonify(all_followers)
+        except Exception as e:
+            print(e)
+            if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
+                return jsonify(all_followers)
+            return jsonify({'message': 'unable to retrieve followers'}), 500
+
+ 
+
+    def getAllUserFollowing(self, user, page):
+        all_following = []
+        try:
+            followings_data = Follower.query.filter_by(follower_user=user).paginate(page=page, per_page=7)
+            for following_data in followings_data.items:
+                following = {'user': following_data.following_user}
+                all_following.append(following)
+            return jsonify(all_following)
+        except Exception as e:
+            print(e)
+            if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
+                return jsonify(all_following)
+            return jsonify({'message': 'unable to retrieve following'}), 500
+    
+
+
+    def getFollowingPosts(self, user, page):
+        all_following_posts = []
+        try:
+            post_data = Post.query.join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).join(Bar).join(Location).join(Rating).outerjoin(Neighborhood, Neighborhood.id == Post.neighborhood_id).order_by(Post.created_at.desc()).paginate(page=page, per_page=3)
+            for post in post_data:
+                if (post.anonymous == True and post.neighborhood is not None):
+                    return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, neighborhood=post.neighborhood.neighborhood).response
+                elif (post.anonymous == False and post.neighborhood is not None):
+                    return_post =  PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, neighborhood=post.neighborhood.neighborhood, created_by=post.created_by).response
+                elif (post.anonymous == True and post.neighborhood is None):
+                    return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at).response
+                else:
+                    return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, created_by=post.created_by).response
+                all_following_posts.append(return_post)
+            jsonify(all_following_posts)
+        except Exception as e:
+            print(e)
+            if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
+                return jsonify(all_following_posts)
+            return jsonify({'message': 'unable to retrieve posts'}), 500
