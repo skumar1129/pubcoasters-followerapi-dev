@@ -18,10 +18,13 @@ class FollowerService():
         try:
             follower = body['follower']
             following = body['following']
-            new_following = Follower(follower_user=follower, following_user=following)
-            db.session.add(new_following)
-            db.session.commit()
-            return jsonify({'message': 'successfully created following'}), 200
+            if follower != following:
+                new_following = Follower(follower_user=follower, following_user=following)
+                db.session.add(new_following)
+                db.session.commit()
+                return jsonify({'message': 'successfully created following'}), 200
+            else:
+                return jsonify({'message': 'user can not follow themselves'}), 500
         except Exception as e:
             print(e)
             return jsonify({'message': 'unable to creating new following'}), 500
@@ -105,7 +108,7 @@ class FollowerService():
         all_following_posts = []
         try:
             post_data = Post.query.join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).join(Bar).join(Location).join(Rating).outerjoin(Neighborhood, Neighborhood.id == Post.neighborhood_id).order_by(Post.created_at.desc()).paginate(page=page, per_page=3)
-            for post in post_data:
+            for post in post_data.items:
                 if (post.anonymous == True and post.neighborhood is not None):
                     return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, neighborhood=post.neighborhood.neighborhood).response
                 elif (post.anonymous == False and post.neighborhood is not None):
@@ -115,7 +118,7 @@ class FollowerService():
                 else:
                     return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, created_by=post.created_by).response
                 all_following_posts.append(return_post)
-            jsonify(all_following_posts)
+            return jsonify(all_following_posts)
         except Exception as e:
             print(e)
             if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
