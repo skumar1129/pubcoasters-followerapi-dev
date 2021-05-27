@@ -29,9 +29,9 @@ def test():
 @cross_origin()
 def follower():
     if request.method == 'POST':
-        return follower_service().createFollowing(request.json)
+        return follower_service().createFollowing(body=request.json)
     elif request.method == 'DELETE':
-        return follower_service.deleteFollowing(request.json)
+        return follower_service().deleteFollowing(body=request.json)
     
 @app.route('/allfollowers', methods=['GET'])
 @cross_origin()
@@ -42,7 +42,7 @@ def allfollower():
         page = 1
     else:
         page = int(req_arg)
-    return follower_service().getAllFollowers(user, page)
+    return follower_service().getAllFollowers(user=user, page=page)
 
 @app.route('/allfollowing', methods=['GET'])
 @cross_origin()
@@ -63,7 +63,7 @@ def userfollowers(user):
         page = 1
     else:
         page = int(req_arg)
-    return follower_service().getAllUserFollowers(user, page)
+    return follower_service().getAllUserFollowers(user=user, page=page)
 
 @app.route('/userfollowing/<string:user>', methods=['GET'])
 @cross_origin()
@@ -73,7 +73,7 @@ def userfollowing(user):
         page = 1
     else:
         page = int(req_arg)
-    return follower_service().getAllUserFollowing(user, page)
+    return follower_service().getAllUserFollowing(user=user, page=page)
 
 @app.route('/followingposts', methods=['GET'])
 @cross_origin()
@@ -84,4 +84,4 @@ def followingposts():
         page = 1
     else:
         page = int(req_arg)
-    return follower_service().getFollowingPosts(user, page)
+    return follower_service().getFollowingPosts(user=user, page=page)

@@ -34,10 +34,10 @@ class FollowerService():
             old_following = Follower.query.filter_by(follower_user=follower, following_user=following).first()
             db.session.delete(old_following)
             db.session.commit()
-            return jsonify({'message': 'successfully created following'}), 200
+            return jsonify({'message': 'successfully deleted following'}), 200
         except Exception as e:
             print(e)
-            return jsonify 
+            return jsonify({'message': 'unable to deleting following'}), 500
 
     def getAllFollowers(self, user, page):
         all_followers = []
