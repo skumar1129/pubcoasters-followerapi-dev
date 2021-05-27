@@ -58,7 +58,6 @@ def allfollowing():
 @app.route('/userfollowers/<string:user>', methods=['GET'])
 @cross_origin()
 def userfollowers(user):
-    user = request.headers.get('user')
     req_arg = request.args.get('offset')
     if (req_arg is None):
         page = 1
@@ -69,7 +68,6 @@ def userfollowers(user):
 @app.route('/userfollowing/<string:user>', methods=['GET'])
 @cross_origin()
 def userfollowers(user):
-    user = request.headers.get('user')
     req_arg = request.args.get('offset')
     if (req_arg is None):
         page = 1
