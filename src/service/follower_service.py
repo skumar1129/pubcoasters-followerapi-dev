@@ -116,7 +116,7 @@ class FollowerService():
                 elif (post.anonymous == False and post.neighborhood is not None):
                     return_post =  PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes, neighborhood=post.neighborhood.neighborhood, created_by=post.created_by).response
                 elif (post.anonymous == True and post.neighborhood is None):
-                    return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_lines=likes).response
+                    return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes).response
                 else:
                     return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes, created_by=post.created_by).response
                 all_following_posts.append(return_post)
