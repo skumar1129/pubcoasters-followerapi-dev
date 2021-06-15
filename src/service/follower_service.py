@@ -108,6 +108,7 @@ class FollowerService():
         all_following_posts = []
         try:
             post_data = Post.query.join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).join(Bar).join(Location).join(Rating).outerjoin(Neighborhood, Neighborhood.id == Post.neighborhood_id).order_by(Post.created_at.desc()).paginate(page=page, per_page=3)
+            post_count = db.session.query(db.func.count(Post.id)).join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).scalar()
             for post in post_data.items:
                 comments = db.session.query(db.func.count(Comment.post_id)).filter_by(post_id=post.id).scalar()
                 likes = db.session.query(db.func.count(Likes.post_id)).filter_by(post_id=post.id).scalar()
@@ -117,9 +118,9 @@ class FollowerService():
                 elif (post.anonymous == False and post.neighborhood is None):
                     return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes, created_by=post.created_by).response
                     all_following_posts.append(return_post)
-            return jsonify(all_following_posts)
+            return jsonify({'count': post_count, 'posts': all_following_posts})
         except Exception as e:
             print(e)
             if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
-                return jsonify(all_following_posts)
+                return jsonify({'count': post_count, 'posts': all_following_posts})
             return jsonify({'message': 'unable to retrieve posts'}), 500
