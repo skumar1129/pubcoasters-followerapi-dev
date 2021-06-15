@@ -118,9 +118,9 @@ class FollowerService():
                 elif (post.anonymous == False and post.neighborhood is None):
                     return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes, created_by=post.created_by).response
                     all_following_posts.append(return_post)
-            return jsonify({'count': post_count, 'posts': all_following_posts})
+            return jsonify({'totalCount': post_count, 'posts': all_following_posts})
         except Exception as e:
             print(e)
             if (e.__str__() == '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'):
-                return jsonify({'count': post_count, 'posts': all_following_posts})
+                return jsonify({'totalCount': post_count, 'posts': all_following_posts})
             return jsonify({'message': 'unable to retrieve posts'}), 500
