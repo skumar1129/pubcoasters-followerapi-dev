@@ -111,15 +111,12 @@ class FollowerService():
             for post in post_data.items:
                 comments = db.session.query(db.func.count(Comment.post_id)).filter_by(post_id=post.id).scalar()
                 likes = db.session.query(db.func.count(Likes.post_id)).filter_by(post_id=post.id).scalar()
-                if (post.anonymous == True and post.neighborhood is not None):
-                    return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes,  neighborhood=post.neighborhood.neighborhood).response
-                elif (post.anonymous == False and post.neighborhood is not None):
+                if (post.anonymous == False and post.neighborhood is not None):
                     return_post =  PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes, neighborhood=post.neighborhood.neighborhood, created_by=post.created_by).response
-                elif (post.anonymous == True and post.neighborhood is None):
-                    return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes).response
-                else:
+                    all_following_posts.append(return_post)
+                elif (post.anonymous == False and post.neighborhood is None):
                     return_post = PostResponse(uuid=post.uuid, pic_link=post.pic_link, description=post.description, bar=post.bar.name, location=post.location.location, rating=post.rating.rating, anonymous=post.anonymous, created_at=post.created_at, edited_at=post.edited_at, num_comments=comments, num_likes=likes, created_by=post.created_by).response
-                all_following_posts.append(return_post)
+                    all_following_posts.append(return_post)
             return jsonify(all_following_posts)
         except Exception as e:
             print(e)
