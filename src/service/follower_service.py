@@ -47,7 +47,12 @@ class FollowerService():
         try:
             followers_data = Follower.query.filter_by(following_user=user).paginate(page=page, per_page=7)
             for follower_data in followers_data.items:
-                follower = {'user': follower_data.follower_user}
+                follower = {
+                    'user': follower_data.follower_user,
+                    'bio': ('' if follower_data.follower[0].bio is None else follower_data.follower[0].bio),
+                    'fullName': follower_data.follower[0].full_name,
+                    'picLink': ('' if follower_data.follower[0].link_to_prof_pic is None else follower_data.follower[0].link_to_prof_pic)
+                }
                 all_followers.append(follower)
             return jsonify(all_followers)
         except Exception as e:
@@ -62,7 +67,12 @@ class FollowerService():
         try:
             followings_data = Follower.query.filter_by(follower_user=user).paginate(page=page, per_page=7)
             for following_data in followings_data.items:
-                following = {'user': following_data.following_user}
+                following = {
+                    'user': following_data.following_user,
+                    'bio': ('' if following_data.following[0].bio is None else following_data.following[0].bio),
+                    'fullName': following_data.following[0].full_name,
+                    'picLink': ('' if following_data.following[0].link_to_prof_pic is None else following_data.following[0].link_to_prof_pic) 
+                }
                 all_following.append(following)
             return jsonify(all_following)
         except Exception as e:
@@ -77,7 +87,12 @@ class FollowerService():
         try:
             followers_data = Follower.query.filter_by(following_user=user).paginate(page=page, per_page=7)
             for follower_data in followers_data.items:
-                follower = {'user': follower_data.follower_user}
+                follower = {
+                    'user': follower_data.follower_user,
+                    'bio': ('' if follower_data.follower[0].bio is None else follower_data.follower[0].bio),
+                    'fullName': follower_data.follower[0].full_name,
+                    'picLink': ('' if follower_data.follower[0].link_to_prof_pic is None else follower_data.follower[0].link_to_prof_pic)
+                }
                 all_followers.append(follower)
             return jsonify(all_followers)
         except Exception as e:
@@ -93,7 +108,12 @@ class FollowerService():
         try:
             followings_data = Follower.query.filter_by(follower_user=user).paginate(page=page, per_page=7)
             for following_data in followings_data.items:
-                following = {'user': following_data.following_user}
+                following = {
+                    'user': following_data.following_user,
+                    'bio': ('' if following_data.following[0].bio is None else following_data.following[0].bio),
+                    'fullName': following_data.following[0].full_name,
+                    'picLink': ('' if following_data.following[0].link_to_prof_pic is None else following_data.following[0].link_to_prof_pic) 
+                }
                 all_following.append(following)
             return jsonify(all_following)
         except Exception as e:
