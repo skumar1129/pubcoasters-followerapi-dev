@@ -58,22 +58,24 @@ def allfollowing():
 @app.route('/userfollowers/<string:user>', methods=['GET'])
 @cross_origin()
 def userfollowers(user):
+    my_user = request.headers.get('user')
     req_arg = request.args.get('offset')
     if (req_arg is None):
         page = 1
     else:
         page = int(req_arg)
-    return follower_service().getAllUserFollowers(user=user, page=page)
+    return follower_service().getAllUserFollowers(user=user, my_user=my_user, page=page)
 
 @app.route('/userfollowing/<string:user>', methods=['GET'])
 @cross_origin()
 def userfollowing(user):
+    my_user = request.headers.get('user')
     req_arg = request.args.get('offset')
     if (req_arg is None):
         page = 1
     else:
         page = int(req_arg)
-    return follower_service().getAllUserFollowing(user=user, page=page)
+    return follower_service().getAllUserFollowing(user=user, my_user=my_user, page=page)
 
 @app.route('/followingposts', methods=['GET'])
 @cross_origin()

@@ -47,11 +47,13 @@ class FollowerService():
         try:
             followers_data = Follower.query.filter_by(following_user=user).paginate(page=page, per_page=7)
             for follower_data in followers_data.items:
+                follow = user in (obj.follower_user for obj in follower_data.follower[0].following)
                 follower = {
                     'user': follower_data.follower_user,
                     'bio': ('' if follower_data.follower[0].bio is None else follower_data.follower[0].bio),
                     'fullName': follower_data.follower[0].full_name,
-                    'picLink': ('' if follower_data.follower[0].link_to_prof_pic is None else follower_data.follower[0].link_to_prof_pic)
+                    'picLink': ('' if follower_data.follower[0].link_to_prof_pic is None else follower_data.follower[0].link_to_prof_pic),
+                    'following': follow
                 }
                 all_followers.append(follower)
             return jsonify(all_followers)
@@ -82,16 +84,18 @@ class FollowerService():
             return jsonify({'message': 'unable to retrieve following'}), 500
     
 
-    def getAllUserFollowers(self, user, page):
+    def getAllUserFollowers(self, user, my_user, page):
         all_followers = []
         try:
             followers_data = Follower.query.filter_by(following_user=user).paginate(page=page, per_page=7)
             for follower_data in followers_data.items:
+                follow = my_user in (obj.follower_user for obj in follower_data.follower[0].following)
                 follower = {
                     'user': follower_data.follower_user,
                     'bio': ('' if follower_data.follower[0].bio is None else follower_data.follower[0].bio),
                     'fullName': follower_data.follower[0].full_name,
-                    'picLink': ('' if follower_data.follower[0].link_to_prof_pic is None else follower_data.follower[0].link_to_prof_pic)
+                    'picLink': ('' if follower_data.follower[0].link_to_prof_pic is None else follower_data.follower[0].link_to_prof_pic),
+                    'following': follow
                 }
                 all_followers.append(follower)
             return jsonify(all_followers)
@@ -103,16 +107,19 @@ class FollowerService():
 
  
 
-    def getAllUserFollowing(self, user, page):
+    def getAllUserFollowing(self, user, my_user, page):
         all_following = []
         try:
             followings_data = Follower.query.filter_by(follower_user=user).paginate(page=page, per_page=7)
             for following_data in followings_data.items:
+                follow = ''
+                follow = my_user in (obj.follower_user for obj in following_data.following[0].following)
                 following = {
                     'user': following_data.following_user,
                     'bio': ('' if following_data.following[0].bio is None else following_data.following[0].bio),
                     'fullName': following_data.following[0].full_name,
-                    'picLink': ('' if following_data.following[0].link_to_prof_pic is None else following_data.following[0].link_to_prof_pic) 
+                    'picLink': ('' if following_data.following[0].link_to_prof_pic is None else following_data.following[0].link_to_prof_pic),
+                    'following': follow 
                 }
                 all_following.append(following)
             return jsonify(all_following)
@@ -124,7 +131,7 @@ class FollowerService():
     
 
 
-    def getFollowingPosts(self, user, page):
+    def getFollowingPosts(self, user, my_user, page):
         all_following_posts = []
         try:
             post_data = Post.query.join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).join(Bar).join(Location).join(Rating).outerjoin(Neighborhood, Neighborhood.id == Post.neighborhood_id).order_by(Post.created_at.desc()).paginate(page=page, per_page=3)
