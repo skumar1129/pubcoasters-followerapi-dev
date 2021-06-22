@@ -1,15 +1,15 @@
 from flask import request, jsonify
-from src.app import db
-from src.models.post import Post
-from src.models.neighborhood import Neighborhood
-from src.models.location import Location
-from src.models.rating import Rating
-from src.models.bar import Bar
-from src.models.likes import Likes
-from src.models.comment import Comment
-from src.models.user import User
-from src.models.follower import Follower
-from src.response.post_response import PostResponse
+from app import db
+from models.post import Post
+from models.neighborhood import Neighborhood
+from models.location import Location
+from models.rating import Rating
+from models.bar import Bar
+from models.likes import Likes
+from models.comment import Comment
+from models.user import User
+from models.follower import Follower
+from response.post_response import PostResponse
 
 
 class FollowerService():
