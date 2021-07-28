@@ -133,9 +133,10 @@ class FollowerService():
 
     def getFollowingPosts(self, user, page):
         all_following_posts = []
+        post_count = 0
         try:
             post_data = Post.query.join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).join(Bar).join(Location).join(Rating).outerjoin(Neighborhood, Neighborhood.id == Post.neighborhood_id).order_by(Post.created_at.desc()).paginate(page=page, per_page=3)
-            post_count = db.session.query(db.func.count(Post.id)).join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).scalar()
+            post_count = db.session.query(db.func.count(Post.id)).filter_by(anonymous = False).join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).scalar()
             for post in post_data.items:
                 comments = db.session.query(db.func.count(Comment.post_id)).filter_by(post_id=post.id).scalar()
                 likes = db.session.query(db.func.count(Likes.post_id)).filter_by(post_id=post.id).scalar()
