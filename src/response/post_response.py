@@ -1,4 +1,4 @@
-from src.models.post import Post
+from models.post import Post
 
 class PostResponse():
 

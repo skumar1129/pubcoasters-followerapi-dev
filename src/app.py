@@ -5,19 +5,19 @@ from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from flask_sslify import SSLify
 import os
-# from config import Config
+from config import Config
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{Config.credentials['username']}:{Config.credentials['password']}@/{Config.credentials['schema']}?unix_socket=/cloudsql/{Config.credentials['connectionname']}"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Sahil23!@localhost/app_localdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+mysqlconnector://{Config.credentials['username']}:{Config.credentials['password']}@/{Config.credentials['schema']}?unix_socket=/cloudsql/{Config.credentials['connectionname']}"
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Sahil23!@localhost/app_localdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 cors = CORS(app)
 migrate = Migrate(app, db)
-# sslify = SSLify(app)
+sslify = SSLify(app)
 
-from src.service.follower_service import FollowerService as follower_service
+from service.follower_service import FollowerService as follower_service
 
 @app.route('/test', methods=['GET'])
 @cross_origin()

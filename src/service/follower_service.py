@@ -1,15 +1,15 @@
 from flask import request, jsonify
-from src.app import db
-from src.models.post import Post
-from src.models.neighborhood import Neighborhood
-from src.models.location import Location
-from src.models.rating import Rating
-from src.models.bar import Bar
-from src.models.likes import Likes
-from src.models.comment import Comment
-from src.models.user import User
-from src.models.follower import Follower
-from src.response.post_response import PostResponse
+from app import db
+from models.post import Post
+from models.neighborhood import Neighborhood
+from models.location import Location
+from models.rating import Rating
+from models.bar import Bar
+from models.likes import Likes
+from models.comment import Comment
+from models.user import User
+from models.follower import Follower
+from response.post_response import PostResponse
 
 
 class FollowerService():
@@ -135,7 +135,11 @@ class FollowerService():
         all_following_posts = []
         post_count = 0
         try:
+<<<<<<< HEAD
             post_data = Post.query.filter_by(anonymous=False).join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).join(Bar).join(Location).join(Rating).outerjoin(Neighborhood, Neighborhood.id == Post.neighborhood_id).order_by(Post.created_at.desc()).paginate(page=page, per_page=3)
+=======
+            post_data = Post.query.join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).join(Bar).join(Location).join(Rating).outerjoin(Neighborhood, Neighborhood.id == Post.neighborhood_id).order_by(Post.created_at.desc()).paginate(page=page, per_page=3)
+>>>>>>> master
             post_count = db.session.query(db.func.count(Post.id)).filter_by(anonymous = False).join(Follower, Follower.following_user == Post.created_by).filter_by(follower_user=user).scalar()
             for post in post_data.items:
                 comments = db.session.query(db.func.count(Comment.post_id)).filter_by(post_id=post.id).scalar()
