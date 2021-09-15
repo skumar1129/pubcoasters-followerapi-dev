@@ -2,6 +2,7 @@ from sqlalchemy import Column, DateTime, String, Integer, Boolean, ForeignKey, f
 from sqlalchemy.orm import relationship, backref
 from app import db
 from uuid import uuid4
+from models.busyness import Busyness
 from models.bar import Bar
 from models.location import Location
 from models.user import User
@@ -23,6 +24,7 @@ class Post(db.Model):
     anonymous = db.Column(db.Boolean, default=False,nullable=False)
     location_id = db.Column(db.Integer, ForeignKey('location.id'), nullable=False)
     neighborhood_id = db.Column(db.Integer, ForeignKey('neighborhood.id'), nullable=True)
+    busyness_id = db.Column(db.Integer, ForeignKey('busyness.id'), nullable=True)
     bar = relationship(
         Bar,
         backref=backref('posts',
@@ -53,9 +55,15 @@ class Post(db.Model):
         uselist=True,
         cascade='delete,all')
     )
+    busyness = relationship(
+        Busyness,
+        backref=backref('posts',
+        uselist=True,
+        cascade='delete,all')
+    )
 
 
-    def __init__(self, uuid, bar_id, description, created_by, rating_id, anonymous, location_id, neighborhood_id=None, pic_link=None): 
+    def __init__(self, uuid, bar_id, description, created_by, rating_id, anonymous, location_id, neighborhood_id=None, pic_link=None, busyness_id=None): 
         self.uuid = uuid
         if pic_link is not None:
             self.pic_link = pic_link
@@ -67,3 +75,5 @@ class Post(db.Model):
         self.location_id = location_id
         if neighborhood_id is not None:
             self.neighborhood_id = neighborhood_id
+        if busyness_id is not None:
+            self.busyness_id = busyness_id
