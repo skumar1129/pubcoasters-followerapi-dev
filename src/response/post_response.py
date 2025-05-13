@@ -2,7 +2,7 @@ from models.post import Post
 
 class PostResponse():
 
-    def __init__(self, uuid, pic_link, bar, location, description, rating, anonymous, created_at, edited_at, likes=None, num_likes=None, comments=None, num_comments=None, neighborhood=None, created_by=None):
+    def __init__(self, uuid, pic_link, bar, location, description, rating, anonymous, created_at, edited_at, likes=None, num_likes=None, comments=None, num_comments=None, neighborhood=None, created_by=None, busyness=None):
         self.response = {
             'uuid': uuid,
             'picLink': pic_link,
@@ -12,7 +12,8 @@ class PostResponse():
             'rating': rating,
             'anonymous': anonymous,
             'createdAt': created_at,
-            'editedAt': edited_at
+            'editedAt': edited_at,
+            'busyness': busyness,
         }
         if comments is not None:
             self.response['comments'] = comments
@@ -26,3 +27,4 @@ class PostResponse():
             self.response['likes'] = likes
         elif num_likes is not None:
             self.response['numLikes'] = num_likes
+        
